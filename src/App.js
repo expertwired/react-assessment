@@ -6,26 +6,36 @@ import {
   SettingRowActions,
   SettingRowTitle,
 } from "./settingRow";
+import { ToggleContext, useToggleContext } from "./toggleContext";
 
 function Toggler({ children }) {
   // todo, implement this re-usable component.
-  return children;
+  const [on, setOn] = React.useState(false)
+  const toggle = React.useCallback(() => setOn(oldState => !oldState), [])
+  const value = React.useMemo(() => ({on, toggle}), [on])
+  return (
+    <ToggleContext.Provider value={value}>
+      {children}
+    </ToggleContext.Provider>
+  );
 }
 
 function TogglerOn({ children }) {
   // todo, implement this re-usable component.
-  return children;
+  const { on } = useToggleContext()
+  return on ? children : null;
 }
 
 function TogglerOff({ children }) {
   // todo, implement this re-usable component.
-  return children;
+  const { on } = useToggleContext()
+  return !on ? children : null;
 }
 
-function TogglerButton() {
+function TogglerButton(props) {
   // todo, implement this re-usable component.
-  const toDoSwitchProps = { on: true, onClick: null };
-  return <Switch {...toDoSwitchProps} />;
+  const { on, toggle } = useToggleContext()
+  return <Switch on={on} onClick={toggle} {...props} />;
 }
 
 function App() {
